@@ -1,150 +1,96 @@
 # RideSmart 🚖
 
-RideSmart is a **user-friendly ride booking assistant** for India that helps users compare and select rides from Ola, Uber, and Rapido in one place. Users can choose exact pickup and drop locations using an interactive map.
+RideSmart is a Streamlit-based app that simulates ride-hailing services (Ola, Uber, Rapido) with live distance & duration calculation using OpenRouteService (ORS) API. Users can input addresses, confirm pickup/drop pins on the map, and view ride options with estimated price and ETA.
 
 ---
 
-## Features Implemented
+## Features
 
-1. **Autocomplete for addresses**
-
-   * Source and Destination fields use geocoding to provide suggestions.
-
-2. **Interactive Map Pin Selection**
-
-   * Click on map to drop pin for exact pickup/drop location.
-   * Draggable markers for fine-tuning.
-
-3. **Simulated Ride Booking**
-
-   * Shows ride options from Ola, Uber, Rapido with ETA & price.
-   * Automatically selects the ride with the **shortest ETA** and “cancels” others.
-
-4. **Free & Portfolio-Friendly**
-
-   * Uses **Nominatim** (OpenStreetMap) for geocoding.
-   * Uses **Folium** for maps and **Streamlit** for the frontend.
+- Autocomplete address search with suggestions
+- Map pin selection for exact pickup and drop points
+- Automatic distance & duration calculation via ORS API
+- Simulated ride options with best ride highlighted
+- Configurable ride rates per km and per minute
+- Friendly UI via Streamlit & Folium
 
 ---
 
-## Tech Stack
+## Setup & Installation
 
-* Python 3.13
-* Streamlit
-* Folium
-* Geopy (Nominatim)
-* Pandas
-
----
-
-## Step-by-Step Implementation
-
-### Step 1: GitHub Repository
-
-1. Created a GitHub repo called `RideSmart`.
-2. Cloned it locally on Mac:
-
-```bash
+### 1. Clone the Repository
 git clone https://github.com/raksiam/RideSmart.git
 cd RideSmart
-```
 
-3. Created a feature branch:
-
-```bash
-git checkout -b feature/initial-app
-```
-
----
-
-### Step 2: Project Structure
-
-1. Created main app file:
-
-```bash
-touch ridesmart_app.py
-```
-
-2. Created supporting files:
-
-```bash
-touch requirements.txt
-```
-
-```bash
-touch README.md
-```
-
----
-
-### Step 3: Virtual Environment & Dependencies
-
-1. Create and activate virtual environment:
-
-```bash
+### 2. Create & Activate Virtual Environment
 python -m venv venv
-source venv/bin/activate
-```
 
-2. Installed dependencies:
+- Linux/macOS:
+  source venv/bin/activate
+- Windows:
+  venv\Scripts\activate
 
-```bash
-pip install streamlit folium geopy pandas streamlit-folium
-```
+### 3. Install Dependencies
+pip install -r requirements.txt
 
-3. Saved dependencies:
+### 4. Configure ORS API Key
+1. Create a `.env` file in the project root.
+2. Add your ORS API key:
 
-```bash
-pip freeze > requirements.txt
-```
+ORS_API_KEY=your_openrouteservice_api_key
 
----
-
-### Step 4: Streamlit App Implementation
-
-1. Implemented autocomplete search for **source and destination** using `geopy.Nominatim`.
-2. Implemented **click-to-drop map pins** using `folium` and `streamlit-folium`.
-3. Added **simulated ride options** for Ola, Uber, Rapido with ETA and price.
-4. Added **automatic selection** of the fastest ride and cancellation of others.
-
-> Full code is in `ridesmart_app.py`
+> You can get a free ORS API key from https://openrouteservice.org/sign-up/
 
 ---
 
-### Step 5: Run the App
+## Usage
 
-```bash
-streamlit run ridesmart_app.py
-```
+1. Run the Streamlit app:
+streamlit run ridesmart.py
 
-* Enter source & destination addresses
-* Confirm exact pickup/drop location on map
-* View simulated ride options and automatic selection
+2. In the web app:
+- Enter the **Source Address** and select from suggestions.
+- Drop a pin on the map to confirm pickup location.
+- Enter the **Destination Address** and select from suggestions.
+- Drop a pin on the map to confirm drop location.
+- View calculated rides (Ola, Uber, Rapido) with ETA and price.
+- The best ride (shortest ETA) will be highlighted and others marked as canceled.
 
 ---
 
-### Step 6: Commit Changes
+## Project Structure
 
-```bash
+- `ridesmart.py` - Main Streamlit app.
+- `ors_client.py` - ORS API client to calculate distance & duration.
+- `ride_values.py` - Configurable ride rates per app (per km & per min).
+- `.env` - Environment file for API keys.
+- `requirements.txt` - Python dependencies.
+
+---
+
+## Development Workflow
+
+1. Create a feature branch:
+git checkout -b feature/branch-name
+
+2. Make changes and commit:
 git add .
-git commit -m "Initial implementation of RideSmart app with autocomplete, map pin, and simulated rides"
-git push origin feature/initial-app
-```
+git commit -m "Describe your changes"
 
-> Note: We pushed to a **feature branch first** instead of main.
+3. Push to GitHub:
+git push origin feature/branch-name
 
----
-
-### Step 7: Next Steps / Improvements
-
-* Integrate **Uber API** for real-time ride estimates.
-* Make Ola & Rapido simulated rides dynamic (random price & ETA).
-* Enhance UI for better user experience.
-* Add screenshots and GIFs for map interaction and ride selection.
+4. Create a Pull Request (PR) to merge changes into `main`.
 
 ---
 
 ## Notes
 
-* Fully free to use with no billing.
-* Works on Mac, Windows, Linux.
+- Ensure the ORS API key is valid and `.env` is properly configured.
+- All distances and durations are automatically calculated; manual input is not required.
+- Ride prices are computed as: `price = per_km * distance + per_min * duration` (values configurable in `ride_values.py`).
+
+---
+
+## License
+
+MIT License
