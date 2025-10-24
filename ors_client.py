@@ -1,30 +1,35 @@
 # ors_client.py
 import os
+from dotenv import load_dotenv
 import openrouteservice
 from openrouteservice import convert
+import streamlit as st
 
-# Try Streamlit secrets first
+# Load .env for local development
+load_dotenv()
+
+# First try to get from Streamlit secrets, then fallback to environment variable
 try:
-    import streamlit as st
     API_KEY = st.secrets["ORS_API_KEY"]
-except (ModuleNotFoundError, KeyError):
-    # fallback to .env for local
-    from dotenv import load_dotenv
-    load_dotenv()
+except Exception:
     API_KEY = os.getenv("ORS_API_KEY")
 
 # Initialize client
 client = None
 if API_KEY:
     client = openrouteservice.Client(key=API_KEY)
-else:
-    client = None
 
-def get_route(start_lon, start_lat, end_lon, end_lat):
+def get_route(start, end):
+    """
+    start: dict with 'lat' and 'lng'
+    end: dict with 'lat' and 'lng'
+    Returns:
+        distance_km, duration_min, geometry_coords
+    """
     if client is None:
         raise RuntimeError("ORS client not configured. Set ORS_API_KEY in .env or Streamlit secrets.")
 
-    coords = ((start_lon, start_lat), (end_lon, end_lat))
+    coords = ((start['lng'], start['lat']), (end['lng'], end['lat']))
     route = client.directions(coords)
 
     summary = route['routes'][0]['summary']
